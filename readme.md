@@ -2,7 +2,7 @@
 
 1.将程序打包成jar包，并将friends_list1.txt，friends_list2.txt导入hdfs文件系统下的/user/<username>/input文件夹内
 
-![image-20201101214109192](C:\Users\luzhongtian\AppData\Roaming\Typora\typora-user-images\image-20201101214109192.png)
+![image](https://github.com/1n5ight/common-friends-1/blob/main/image_folder/1.jpg)
 
  
 
@@ -10,7 +10,7 @@
 
 ` hadoop jar common-friends-1.jar `，这是用基本数据类型的程序。用自定义数据类型的jar包名为common-friends-2.jar，运行和common-friends-1.jar一样
 
-![image-20201101214148927](C:\Users\luzhongtian\AppData\Roaming\Typora\typora-user-images\image-20201101214148927.png)
+![image](https://github.com/1n5ight/common-friends-1/blob/main/image_folder/2.jpg)
 
 
 
@@ -18,7 +18,7 @@
 
 3.结果输出在/output1/part-r-00000，如下图
 
-![image-20201101214359742](C:\Users\luzhongtian\AppData\Roaming\Typora\typora-user-images\image-20201101214359742.png) 
+![image](https://github.com/1n5ight/common-friends-1/blob/main/image_folder/3.jpg) 
 
  
 
@@ -26,7 +26,7 @@
 
 4.下图证明是在集群上运行的
 
-![image-20201101214648563](C:\Users\luzhongtian\AppData\Roaming\Typora\typora-user-images\image-20201101214648563.png) 
+![image](https://github.com/1n5ight/common-friends-1/blob/main/image_folder/4.jpg) 
 
 ### 二、设计思路
 
@@ -42,17 +42,18 @@
 400	100, 200, 300
 500	100, 300
 
-第二个部分是一一配对，即对第一部分输出的每一个friend所对应的name两两组合，再进行合并，最终输出为（暂不考虑格式）
+第二个部分是一一配对，即对第一部分输出的每一个friend所对应的name两两组合，再进行合并，最终输出为
 200, 300:	100, 400
 100, 300:	200, 500
 100, 200:	300, 400
 
 ​		在倒排索引部分，比较简单，map部分就是把每一行的name,	friend1 friend2 ... 拆成<name, friend1>，<name, friend2>...，再将key和value交换位置，reduce部分对每个相同的key进行合并，输出结果如下
-![image-20201101221949066](C:\Users\luzhongtian\AppData\Roaming\Typora\typora-user-images\image-20201101221949066.png)
+![image](https://github.com/1n5ight/common-friends-1/blob/main/image_folder/5.jpg)
 
 
 
-​		在一一配对部分，map部分要注意的是，必须对倒排索引部分输出的value进行排序，否则，如上图，200那一行按顺序给出的是100, 300，500那一行按顺序给出的是300, 100，但这两个其实是同样一对。排序之后就不会出现这个问题。reduce很简单，根据相同的“name对”进行合并即可，结果如下![image-20201101214359742](file://C:/Users/luzhongtian/AppData/Roaming/Typora/typora-user-images/image-20201101214359742.png?lastModify=1604240935)
+​		在一一配对部分，map部分要注意的是，必须对倒排索引部分输出的value进行排序，否则，如上图，200那一行按顺序给出的是100, 300，500那一行按顺序给出的是300, 100，但这两个其实是同样一对。排序之后就不会出现这个问题。reduce很简单，根据相同的“name对”进行合并即可，结果如下
+![image](https://github.com/1n5ight/common-friends-1/blob/main/image_folder/6.jpg)
 
 
 
